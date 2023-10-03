@@ -6,9 +6,11 @@
     import {computed, ref} from "vue";
     import Navigation from "./components/layouts/Navigation.vue";
     import Footer from "./components/layouts/Footer.vue";
+    import ErrorDetector from "./components/ErrorDetector.vue";
 
     const routes = {
         '/': MyForm,
+        '/find-errors': ErrorDetector,
         '/privacy': PrivacyPolicy,
         '/contact': Contact
     }

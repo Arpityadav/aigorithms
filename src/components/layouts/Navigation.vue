@@ -8,10 +8,11 @@
 
             <div class="container mx-auto flex justify-between items-center">
                 <!--                    <img src="https://avrasys.hu/logoipsum-logo-54.svg" alt="Tailwindcss Navigation">-->
-                <p class="font-semibold text-red-400 text-4xl ml-4" style="font-family: 'Pixelify Sans', cursive;">Aigorithms</p>
+                <a href="#" class="font-semibold text-red-400 text-4xl ml-4 cursor-pointer" style="font-family: 'Pixelify Sans', cursive;">Aigorithms</a>
 
                 <ul class="hidden md:flex space-x-6">
                     <li><a href="#">Home</a></li>
+                    <li><a href="#/find-errors">Find Errors in your problem</a></li>
 <!--                    <li><a href="#/contact">Contact</a></li>-->
                     <li><a href="#/privacy">Privacy</a></li>
                 </ul>
