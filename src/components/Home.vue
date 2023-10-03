@@ -17,7 +17,6 @@ import "prismjs/components/prism-java.min.js"
 // import "prismjs/components/prism-cpp.js"
 // This is needed for a conflict with other CSS files being used (i.e. Bulma).
 import "prismjs/plugins/custom-class/prism-custom-class";
-import Navigation from "./Navigation.vue";
 
 prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
 
@@ -26,11 +25,11 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
     const problem = ref('');
     const answer = ref('');
     const answerExplain = ref('');
-    const description = ref('');
     const selectedOption = ref('Python');
     const selectedApproach = ref('Optimized');
     const submitted = ref(false);
     const loading = ref(false);
+    const loadingExplain = ref(false);
 
     marked.use({
         highlight: (code, lang) => {
@@ -42,35 +41,14 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
         },
     });
 
-    // Define the submitForm function
-    const submitForm = async () => {
-        try {
-            loading.value = true; // Show loading button
-            await makeOpenAIRequest(); // Make API request
-            // const codeAnswer = await makeOpenAIRequest(); // Make API request
-            // const explainAnswer = await makeOpenAIRequestToGetExplain(codeAnswer);
-            // answer.value = codeAnswer;
-            // prism.highlightAll();
-
-            // answerExplain.value = explainAnswer;
-            // console.log('Generated Text:', generatedText); // Handle the generated text
-        } catch (error) {
-            console.error('Error:', error);
-            // Handle error here
-        } finally {
-            loading.value = false; // Hide loading button
-            submitted.value = true; // Show the new section after form submission
-        }
-    };
     const renderedAnswer = computed(() => {
-        console.log('hello');
         return marked.parse(answer.value);
     });
 
     // Define the makeOpenAIRequest function
     function makeOpenAIRequest() {
         loading.value = true; // Show loading button
-        const userPrompt = `Write Solution code to ${problem.value}  problem in ${selectedOption.value} in ${selectedApproach.value} approach . I want the code and explain each line with comments. Explain nothing outside comments. Use classname as Solution. Only provide the code. Before providing the code, just say: "Here's your code:". Don't explain the code and approach`;
+        const userPrompt = `Write Solution code to ${problem.value}  problem in ${selectedOption.value} in ${selectedApproach.value} approach with comments.  Use classname as Solution. Before providing the code, just say: "Here's your code:"." Do not give me any information about explanation and procedures that are not mentioned in the PROVIDED CONTEXT"`;
         axios.post(
             'https://api.openai.com/v1/chat/completions',
             {
@@ -78,18 +56,7 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
                 messages: [
                     {
                         role: "user",
-                        content: userPrompt + `
-                            ###
-                            outline: Write Solution code to HouseRobber II problem in Python in optimized approach . I want the code with proper indentation and explain each line with comments. Use classname as Solution. I only need the code
-                            message: Here's your code:
-                                Solution code
-                            ###
-                            outline: Write Solution code to Reverse Words in a String III problem in Java in brute force approach . I want the code with proper indentation and explain each line with comments. Use classname as Solution. I only need the code
-                            message: Here's your code:
-                                Solution code
-                            outline: ${userPrompt},
-                            message:
-                        `
+                        content: userPrompt
                     }
                 ],
                 max_tokens: 700,
@@ -102,7 +69,7 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
             }
         )
         .then(response => {
-            answer.value = response.data.choices[0].message.content.replace(/```/g, '~~~');
+            answer.value = response.data.choices[0].message.content;
         })
         .then(() => {
             prism.highlightAll(); // Perform the highlighting of the Code Blocks
@@ -118,8 +85,9 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
 
 
     const makeOpenAIRequestToGetExplain = async (code) => {
+        loadingExplain.value = true;
         try {
-            const response = await axios.post(
+            await axios.post(
                 'https://api.openai.com/v1/chat/completions',
                 {
                     model: 'gpt-3.5-turbo',
@@ -136,8 +104,10 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
                         'Content-Type': 'application/json',
                     },
                 }
-            );
-            return marked(response.data.choices[0].message.content);
+            ).then((response) => {
+                answerExplain.value = marked(response.data.choices[0].message.content);
+                loadingExplain.value = false;
+            });
         } catch (error) {
             throw new Error('Error making OpenAI request: ' + error.message);
         }
@@ -149,7 +119,7 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
     <div>
         <!-- Form Row -->
         <div class="container mt-8 flex flex-wrap justify-center">
-            <h2 class="text-2xl font-bold text-center mb-4">Submit a Problem</h2>
+            <h2 class="text-2xl font-bold text-center mb-4">Find solutions to DSA problems</h2>
             <div class="w-full p-8 bg-white shadow-lg rounded-lg flex md:flex-row md:space-x-4">
                 <div class="flex flex-grow align-text-bottom justify-end">
                     <!-- Form Content -->
@@ -193,28 +163,17 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
 
         <div class="container mx-auto mt-8 flex justify-center">
             <div class="w-full md:mx-32 flex flex-wrap">
-<!--                <div class="w-full p-4 bg-white shadow-lg rounded-lg">-->
-<!--                    <h2 class="text-2xl font-bold text-center mb-4">Column 1</h2>-->
-<!--                    <textarea-->
-<!--                        v-model="answer"-->
-<!--                        class="w-full h-48 border py-2 px-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300"-->
-<!--                        placeholder="Column 1 Content"-->
-<!--                    ></textarea>-->
-<!--                </div>-->
-<!--                <Tiptap></Tiptap>-->
-
                 <div class="line-numbers language-markup w-full" v-html="renderedAnswer" v-if="answer"></div>
-<!--                <div v-if="answer" v-html="answer" class="language-* md:w-1/2"></div>-->
-<!--                <div v-if="markeds" v-html="markeds" class="language-* md:w-1/2"></div>-->
-<!--                <div  class="language-* md:w-1/2"></div>-->
-<!--                <div class="w-full md:w-1/2 p-4 bg-white shadow-lg rounded-lg mt-4 md:mt-0" v-if="false">-->
-<!--                    <h2 class="text-2xl font-bold text-center mb-4">Column 2</h2>-->
-<!--                    <textarea-->
-<!--                        v-model="answerExplain"-->
-<!--                        class="w-full h-48 border py-2 px-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300"-->
-<!--                        placeholder="Column 2 Content"-->
-<!--                    ></textarea>-->
-<!--                </div>-->
+
+                <div v-if="submitted" class="w-full">
+                    <div v-if="!answerExplain" class="mt-4 w-full">
+                        <a v-if="!loadingExplain" class="text-blue-600 hover:text-blue-700 hover:underline flex justify-center text-lg cursor-pointer" @click="makeOpenAIRequestToGetExplain">Explain more</a>
+                        <div v-else class="text-blue-500 flex justify-center text-lg">Getting more info, please wait...</div>
+                    </div>
+                    <div v-if="answerExplain" class="line-numbers language-markup w-full mt-4" v-html="answerExplain"></div>
+                </div>
+
+                <div class="flex flex-row w-full mt-2" v-if="answer"><small class="flex text-gray-500 w-full justify-end">*OpenAI last training cut-off in September 2021. Answer to questions after that date may be vary. Use <a href="https://www.bing.com/?/ai" class="mx-1 text-blue-400 hover:text-blue-500 hover:underline">Bing AI</a>  for questions after date.</small></div>
             </div>
         </div>
 
@@ -299,5 +258,9 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
     text-align: center;
     min-height: 80px;
     margin: 0 auto 10px;
+}
+
+.line-numbers ol {
+    @apply list-decimal
 }
 </style>

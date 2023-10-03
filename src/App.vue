@@ -1,11 +1,11 @@
 <script setup>
-    import MyForm from "./components/MyForm.vue";
+    import MyForm from "./components/Home.vue";
     import PrivacyPolicy from "./components/PrivacyPolicy.vue";
     import Contact from "./components/Contact.vue";
     import NotFound from "./components/NotFound.vue";
     import {computed, ref} from "vue";
-    import Navigation from "./components/Navigation.vue";
-    import Footer from "./components/Footer.vue";
+    import Navigation from "./components/layouts/Navigation.vue";
+    import Footer from "./components/layouts/Footer.vue";
 
     const routes = {
         '/': MyForm,
