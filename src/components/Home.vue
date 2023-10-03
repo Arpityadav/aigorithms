@@ -118,10 +118,10 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
 <template>
     <div>
         <!-- Form Row -->
-        <div class="container mt-8 flex flex-wrap justify-center">
+        <div class="mt-8 flex flex-wrap justify-center">
             <h2 class="text-2xl font-bold text-center mb-4">Find solutions to DSA problems</h2>
-            <div class="w-full p-8 bg-white shadow-lg rounded-lg flex md:flex-row md:space-x-4">
-                <div class="flex flex-grow align-text-bottom justify-end">
+            <div class="w-full p-8 bg-white shadow-lg rounded-lg flex md:flex-row flex-col md:space-x-4">
+                <div class="block md:flex flex-grow align-text-bottom justify-end">
                     <!-- Form Content -->
                     <div class="">
                         <label for="problem" class="block text-gray-700 text-sm font-bold mb-2">Please enter your problem </label>
@@ -130,7 +130,7 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
                 </div>
 
                 <div class="flex flex-grow align-top content-start">
-                    <div class="w-full">
+                    <div class="w-full mt-4 md:mt-0">
                         <label for="dropdown" class="block text-gray-700 text-sm font-bold mb-2"> Language </label>
                         <select id="dropdown" v-model="selectedOption" name="dropdown" class="w-full border py-2 px-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300">
                             <option value="Python">Python</option>
@@ -141,7 +141,7 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
                 </div>
 
                 <div class="flex flex-grow align-top content-start">
-                    <div class="w-full">
+                    <div class="w-full mt-4 md:mt-0">
                         <label for="dropdown" class="block text-gray-700 text-sm font-bold mb-2"> Approach </label>
                         <select id="dropdown" v-model="selectedApproach" name="dropdown" class="w-full border py-2 px-3 rounded-lg focus:outline-none focus:ring focus:border-blue-300">
                             <option value="Optimized">Optimized</option>
@@ -150,10 +150,10 @@ prism.plugins.customClass.map({ number: "prism-number", tag: "prism-tag" });
                     </div>
                 </div>
 
-                <div class="flex flex-grow">
+                <div class="block md:flex md:flex-grow">
                     <div class="mt-6 text-center">
-                        <button type="button" v-if="!loading" class="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red" @click="makeOpenAIRequest"> Search </button>
-                        <button type="button" v-if="loading"  class="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red" disabled> Loading... </button>
+                        <button type="button" v-if="!loading" class="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red w-full" @click="makeOpenAIRequest"> Search </button>
+                        <button type="button" v-if="loading"  class="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red w-full" disabled> Thinking... </button>
                     </div>
                 </div>
             </div>

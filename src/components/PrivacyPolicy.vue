@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex mx-32">
+    <div class="min-h-screen flex mx-0 md:mx-32">
         <div class="bg-white p-8">
             <h1 class="text-3xl font-bold text-center text-red-700 mb-6">Privacy Policy</h1>
 

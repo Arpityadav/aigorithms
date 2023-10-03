@@ -103,10 +103,10 @@ onMounted(() => {
 <template>
     <div>
         <!-- Form Row -->
-        <div class="container mt-8 flex flex-wrap justify-center">
+        <div class="mt-8 flex flex-wrap justify-center">
             <h2 class="text-2xl font-bold text-center mb-4">Find Errors in your DSA question</h2>
-            <div class="w-full p-8 bg-white shadow-lg rounded-lg flex md:flex-row md:space-x-4">
-                <div class="flex flex-grow align-text-bottom justify-end">
+            <div class="w-full p-8 bg-white shadow-lg rounded-lg flex md:flex-row flex-col md:space-x-4">
+                <div class="block md:flex flex-grow align-text-bottom justify-end">
                     <!-- Form Content -->
                     <div class="">
                         <label for="problem" class="block text-gray-700 text-sm font-bold mb-2">Please enter your problem </label>
@@ -123,10 +123,10 @@ onMounted(() => {
                     </div>
                 </div>
 
-                <div class="flex flex-grow">
+                <div class="block md:flex md:flex-grow">
                     <div class="mt-6 text-center">
-                        <button type="button" v-if="!loading" class="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red" @click="makeOpenAIRequest"> Search </button>
-                        <button type="button" v-if="loading"  class="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red" disabled> Loading... </button>
+                        <button type="button" v-if="!loading" class="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red w-full" @click="makeOpenAIRequest"> Find Errors </button>
+                        <button type="button" v-if="loading"  class="bg-red-400 hover:bg-red-500 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red w-full" disabled> Thinking... </button>
                     </div>
                 </div>
             </div>
